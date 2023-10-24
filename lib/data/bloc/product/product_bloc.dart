@@ -20,7 +20,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future<void> getProducts(
       ProductEvent event, Emitter<ProductState> emit) async {
     emit(state.copyWith(isLoading: true));
-    emit(state.copyWith(products: await productRepository.getProducts()));
+    List<Product> products = await  productRepository.getProducts();
+    emit(state.copyWith(products: products));
     emit(state.copyWith(isLoading: false));
   }
 }

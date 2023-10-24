@@ -4,7 +4,7 @@ class ProductState extends Equatable {
   final bool isLoading;
   final List<Product>? products;
 
-  const ProductState({this.products, this.isLoading = false});
+  const ProductState({this.products=const [], this.isLoading = false});
 
   ProductState copyWith({bool? isLoading, List<Product>? products}) =>
       ProductState(

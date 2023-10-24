@@ -13,7 +13,7 @@ abstract class ProductApi{
   @factoryMethod
   factory ProductApi(Dio dio) = _ProductApi;
 
-  @GET('/products')
+  @GET('/products/category/jewelery')
   Future<List<Product>> getProducts();
 
 }

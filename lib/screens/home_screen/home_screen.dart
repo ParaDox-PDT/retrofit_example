@@ -12,39 +12,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isLoading = false;
+  _init()async{
+    Future.delayed(Duration(seconds: 3));
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Products'),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<ProductBloc, ProductState>(
-        buildWhen: (previous, current) => previous.products != current.products,
-        builder: (context, state) => context.read<ProductBloc>().state.isLoading
-            ? const Center(
-                child: CircularProgressIndicator.adaptive(),
-              )
-            : CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        ...List.generate(state.products!.length, (index) {
-                          Product product = state.products![index];
-                          return ListTile(
-                            title: Text(product.title),
-                            subtitle: Text(product.description),
-                            leading:
-                                CachedNetworkImage(imageUrl: product.image),
-                          );
-                        })
-                      ],
-                    ),
-                  )
-                ],
-              ),
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Products'),
+          centerTitle: true,
+        ),
+        body: BlocConsumer<ProductBloc, ProductState>(
+          builder: (context, state) {
+            return ListView(
+              children: [ ...List.generate(state.products!.length, (index) {
+                Product product = state.products![index];
+                return ListTile(
+                  title: Text(product.title),
+                  subtitle: Text(product.description),
+                  leading: CachedNetworkImage(imageUrl: product.image),
+                );
+              })],
+            );
+          },
+          listener: (context, state) {
+            if (!state.isLoading) {
+              setState(() {});
+            }
+          },
+        ));
   }
 }
